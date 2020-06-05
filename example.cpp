@@ -1,22 +1,22 @@
-#include "property.hpp"
 #include <iostream>
 
+#include "property.hpp"
+
 class A {
-private:
+ private:
   int i_ = 5;
 
   int get_i() const { return i_; }
 
   void set_i(int new_i) {
-    if (new_i < 0 || new_i > 10)
-      return;
+    if (new_i < 0 || new_i > 10) return;
     i_ = new_i;
   }
 
   float get_f() const { return 50.f; }
 
-public:
-  A(){}; // note: default constructor required for MSVC
+ public:
+  A(){};  // note: default constructor required for MSVC
   // A() = default; // will fail to link under MSVC
 
   PROPERTIES_BEGIN()
@@ -31,12 +31,12 @@ int main() {
   auto a2 = a;
 
   a.i = 6;
-  std::cout << "a.i: " << a.i << "\n"; // prints 6
+  std::cout << "a.i: " << a.i << "\n";  // prints 6
 
   a.i = 20;
-  std::cout << "a.i: " << a.i << "\n"; // prints 6
+  std::cout << "a.i: " << a.i << "\n";  // prints 6
 
-  // auto error = a.i;                 // will not compile
-  // a.f = 7.f;                        // fails to compile
-  std::cout << "a.f: " << a.f << "\n"; // prints 50
+  // auto error = a.i;                  // will not compile
+  // a.f = 7.f;                         // fails to compile
+  std::cout << "a.f: " << a.f << "\n";  // prints 50
 }

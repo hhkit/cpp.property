@@ -12,20 +12,23 @@
 
 namespace fcp {
 namespace prop_detail {
-template <typename T> struct extract_memfn_types;
-} // namespace prop_detail
+template <typename T>
+struct extract_memfn_types;
+}  // namespace prop_detail
 
-template <typename T, auto GetFn, auto SetFn = nullptr> class property;
+template <typename T, auto GetFn, auto SetFn = nullptr>
+class property;
 
 template <typename T, auto GetFn, auto SetFn>
 std::ostream &operator<<(std::ostream &os, const property<T, GetFn, SetFn> &p);
 
-template <typename T, auto GetFn, auto SetFn> class property {
-private:
+template <typename T, auto GetFn, auto SetFn>
+class property {
+ private:
   using GetFnInfo = prop_detail::extract_memfn_types<decltype(GetFn)>;
   using SetFnInfo = prop_detail::extract_memfn_types<decltype(SetFn)>;
 
-public:
+ public:
   explicit property() = default;
   explicit property(const property &) = default;
   explicit property(property &&) = default;
@@ -39,9 +42,7 @@ public:
   property &operator=(const property<T2, GetFn2, SetFn2> &rhs) noexcept(
       SetFnInfo::is_noexcept_v &&noexcept(rhs.get()));
 
-  friend std::ostream &operator<<<>(std::ostream &os, const property &p);
-
-private:
+ private:
   using GetT = typename GetFnInfo::type;
   using SetT = typename SetFnInfo::type;
 
@@ -51,11 +52,12 @@ private:
   SetT *setter_this() noexcept;
 };
 
-template <typename T, auto GetFn> class property<T, GetFn, nullptr> {
-private:
+template <typename T, auto GetFn>
+class property<T, GetFn, nullptr> {
+ private:
   using GetFnInfo = prop_detail::extract_memfn_types<decltype(GetFn)>;
 
-public:
+ public:
   explicit property() = default;
   explicit property(const property &) = default;
   explicit property(property &&) = default;
@@ -63,23 +65,21 @@ public:
   T get() const noexcept(GetFnInfo::is_noexcept_v);
   operator T() const noexcept(noexcept(get()));
 
-  friend std::ostream &operator<<<>(std::ostream &os, const property &p);
-
-private:
+ private:
   using GetT = typename prop_detail::extract_memfn_types<decltype(GetFn)>::type;
 
   int offset_;
 
   const GetT *getter_this() const noexcept;
 };
-} // namespace fcp
+}  // namespace fcp
 
-#define PROPERTIES_BEGIN()                                                     \
-  union {                                                                      \
+#define PROPERTIES_BEGIN() \
+  union {                  \
     ::fcp::prop_detail::property_offset PROPERTY_OFFSET{this};
 
-#define PROPERTIES_END()                                                       \
-  }                                                                            \
+#define PROPERTIES_END() \
+  }                      \
   ;
 
 /* Implementation follows below. */
@@ -115,7 +115,7 @@ struct extract_memfn_types<Ret (Mem::*)(Args...) const noexcept> {
 };
 
 class property_offset {
-public:
+ public:
   explicit property_offset(const void *obj) {
     // rather than store the "this" pointer, we store the offset
     // this allows us to copy/move the property_offset class trivially
@@ -125,10 +125,10 @@ public:
     offset_ = member_ptr - obj_ptr;
   }
 
-private:
+ private:
   int offset_;
 };
-} // namespace prop_detail
+}  // namespace prop_detail
 
 /* Property implementation */
 template <typename T, auto GetFn, auto SetFn>
@@ -200,6 +200,6 @@ property<T, GetFn, nullptr>::getter_this() const noexcept {
   const auto member_ptr = reinterpret_cast<const std::byte *>(this);
   return reinterpret_cast<const GetT *>(member_ptr - offset_);
 }
-} // namespace fcp
+}  // namespace fcp
 
 #endif
