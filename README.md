@@ -10,7 +10,8 @@ following weaknesses:
 * Properties will add a minimum of `sizeof(unsigned)` bytes to your class, 
   padded to `alignof(unsigned)`.
 * Getters and setters used in the properties must be declared before the 
-  properties themselves or the symbol will not be unrecognized by the compiler.
+  properties themselves or the symbol will not be recognized by the compiler,
+  resulting in a compile error.
 
 ## Installation
 * Copy `property.hpp` into your project.
@@ -23,14 +24,14 @@ A property is constructed using the `fcp::property` template, which takes in
 three arguments:
 1. `T`, the type of the property.
 2. `GetFn`, a pointer to the getter member function for the property
-   The member function pointed to by GetFn must be const-qualified.
+   The member function pointed to by GetFn must be `const`-qualified.
 3. `SetFn`, an optional setter for the property.
 
 The properties must be guarded by the `PROPERTIES_BEGIN()` and 
-`PROPERTIES_END()` macros, which hide a union and a property_offset object that
-serves as a helper to determine the `this` pointer of the object. Changing the
-values in the union and adding non-property variables to the guard may result in
-undefined behavior.
+`PROPERTIES_END()` macros, which hide a union and a `property_offset` object 
+that serves as a helper to determine the `this` pointer of the object. 
+Changing the values in the union and adding non-property variables to the 
+guard may result in undefined behavior.
 
 Example:
 ```cpp
@@ -84,8 +85,8 @@ int main()
   int main()
   {
     A a{};
-    auto runtime_error = a.i; // will cause runtime error
-    runtime_error = 5;
+    auto runtime_error = a.i; 
+    runtime_error = 5; // will cause a runtime error
   }
   ```
 
