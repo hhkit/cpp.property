@@ -4,7 +4,8 @@ A single-header property class written in C++17 that adds property functionality
 to C++.
 
 Note that C++ was not built to support this for a reason. Enabling properties in
-your class is not a zero-cost abstraction. In particular,
+your class is not a zero-cost abstraction. In particular, this system has the
+following weaknesses:
 * Properties will set your class's minimum alignment to `alignof(unsigned)`.
 * Properties will add a minimum of `sizeof(unsigned)` bytes to your class, 
   padded to `alignof(unsigned)`.
@@ -20,10 +21,10 @@ your class is not a zero-cost abstraction. In particular,
 ## Usage
 A property is constructed using the `fcp::property` template, which takes in
 three arguments:
-1. T, the type of the property.
-2. GetFn, a pointer to the getter member function for the property
+1. `T`, the type of the property.
+2. `GetFn`, a pointer to the getter member function for the property
    The member function pointed to by GetFn must be const-qualified.
-3. SetFn, an optional setter for the property.
+3. `SetFn`, an optional setter for the property.
 
 The properties must be guarded by the `PROPERTIES_BEGIN()` and 
 `PROPERTIES_END()` macros, which hide a union and a property_offset object that
