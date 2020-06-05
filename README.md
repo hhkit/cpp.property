@@ -4,12 +4,14 @@ A single-header property class written in C++17 that adds property functionality
 to C++.
 
 Note that C++ was not built to support this for a reason. Enabling properties in
-your class is not a zero-cost abstraction. In particular,
+your class is not a zero-cost abstraction. In particular, this system has the
+following weaknesses:
 * Properties will set your class's minimum alignment to `alignof(unsigned)`.
 * Properties will add a minimum of `sizeof(unsigned)` bytes to your class, 
   padded to `alignof(unsigned)`.
 * Getters and setters used in the properties must be declared before the 
-  properties themselves or the symbol will not be unrecognized by the compiler.
+  properties themselves or the symbol will not be recognized by the compiler,
+  resulting in a compile error.
 
 ## Installation
 * Copy `property.hpp` into your project.
@@ -20,16 +22,16 @@ your class is not a zero-cost abstraction. In particular,
 ## Usage
 A property is constructed using the `fcp::property` template, which takes in
 three arguments:
-1. T, the type of the property.
-2. GetFn, a pointer to the getter member function for the property
-   The member function pointed to by GetFn must be const-qualified.
-3. SetFn, an optional setter for the property.
+1. `T`, the type of the property.
+2. `GetFn`, a pointer to the getter member function for the property
+   The member function pointed to by GetFn must be `const`-qualified.
+3. `SetFn`, an optional setter for the property.
 
 The properties must be guarded by the `PROPERTIES_BEGIN()` and 
-`PROPERTIES_END()` macros, which hide a union and a property_offset object that
-serves as a helper to determine the `this` pointer of the object. Changing the
-values in the union and adding non-property variables to the guard may result in
-undefined behavior.
+`PROPERTIES_END()` macros, which hide a union and a `property_offset` object 
+that serves as a helper to determine the `this` pointer of the object. 
+Changing the values in the union and adding non-property variables to the 
+guard may result in undefined behavior.
 
 Example:
 ```cpp
@@ -83,8 +85,8 @@ int main()
   int main()
   {
     A a{};
-    auto runtime_error = a.i; // will cause runtime error
-    runtime_error = 5;
+    auto runtime_error = a.i; 
+    runtime_error = 5; // will cause a runtime error
   }
   ```
 
