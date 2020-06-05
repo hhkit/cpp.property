@@ -26,6 +26,10 @@ private:
   using SetFnInfo = prop_detail::extract_memfn_types<decltype(SetFn)>;
 
 public:
+  explicit property() = default;
+  explicit property(const property &) = default;
+  explicit property(property &&) = default;
+
   T get() const noexcept(GetFnInfo::is_noexcept_v);
   void set(const T &val) noexcept(SetFnInfo::is_noexcept_v);
 
@@ -52,6 +56,10 @@ private:
   using GetFnInfo = prop_detail::extract_memfn_types<decltype(GetFn)>;
 
 public:
+  explicit property() = default;
+  explicit property(const property &) = default;
+  explicit property(property &&) = default;
+
   T get() const noexcept(GetFnInfo::is_noexcept_v);
   operator T() const noexcept(noexcept(get()));
 

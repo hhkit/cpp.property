@@ -28,12 +28,15 @@ public:
 int main() {
   A a{};
 
+  auto a2 = a;
+
   a.i = 6;
   std::cout << "a.i: " << a.i << "\n"; // prints 6
 
   a.i = 20;
   std::cout << "a.i: " << a.i << "\n"; // prints 6
 
+  // auto error = a.i;                 // will not compile
   // a.f = 7.f;                        // fails to compile
   std::cout << "a.f: " << a.f << "\n"; // prints 50
 }

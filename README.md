@@ -72,24 +72,13 @@ int main()
   a.i = 20;
   std::cout << "a.i: " << a.i << "\n"; // prints 6
   
+  // auto error = a.i;                 // will not compile
   // a.f = 7.f;                        // fails to compile
   std::cout << "a.f: " << a.f << "\n"; // prints 50
 }
 ```
 
 ## Known Issues
-* Properties may be copied out of their respective classes, which may result in
-  undefined behavior or segmentation faults. For example, this is an error that
-  is impossible to detect at compile time.
-  ```cpp
-  int main()
-  {
-    A a{};
-    auto runtime_error = a.i; 
-    runtime_error = 5; // will cause a runtime error
-  }
-  ```
-
 * MSVC fails to link when default constructing a value without arguments.
   This is due to an abuse in the language where the this pointer is passed in
   during aggregate initialization, which MSVC does not invoke when no arguments
