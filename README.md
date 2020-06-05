@@ -91,8 +91,8 @@ int main()
 * MSVC fails to link when default constructing a value without arguments.
   This is due to an abuse in the language where the this pointer is passed in
   during aggregate initialization, which MSVC does not invoke when no arguments
-  are provided. To fix this issue, simply call the constructor by using an empty
-  pair of braces.
+  are provided. To fix this issue, a default constructor must be defined (note:
+  without using `= default`) in the class.
 
   ```cpp
   int main()

@@ -16,6 +16,9 @@ private:
   float get_f() const { return 50.f; }
 
 public:
+  A(){}; // note: default constructor required for MSVC
+  // A() = default; // will fail to link under MSVC
+
   PROPERTIES_BEGIN()
   fcp::property<int, &A::get_i, &A::set_i> i;
   fcp::property<float, &A::get_f> f;
