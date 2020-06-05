@@ -8,6 +8,7 @@
 #define FCP_PROPERTY_HPP_
 
 #include <cstddef>
+#include <iosfwd>
 
 namespace fcp {
 namespace prop_detail {
@@ -15,6 +16,9 @@ template <typename T> struct extract_memfn_types;
 } // namespace prop_detail
 
 template <typename T, auto GetFn, auto SetFn = nullptr> class property;
+
+template <typename T, auto GetFn, auto SetFn>
+std::ostream &operator<<(std::ostream &os, const property<T, GetFn, SetFn> &p);
 
 template <typename T, auto GetFn, auto SetFn> class property {
 private:
@@ -30,6 +34,8 @@ public:
   template <typename T2, auto GetFn2, auto SetFn2>
   property &operator=(const property<T2, GetFn2, SetFn2> &rhs) noexcept(
       SetFnInfo::is_noexcept_v &&noexcept(rhs.get()));
+
+  friend std::ostream &operator<<<>(std::ostream &os, const property &p);
 
 private:
   using GetT = typename GetFnInfo::type;
@@ -48,6 +54,8 @@ private:
 public:
   T get() const noexcept(GetFnInfo::is_noexcept_v);
   operator T() const noexcept(noexcept(get()));
+
+  friend std::ostream &operator<<<>(std::ostream &os, const property &p);
 
 private:
   using GetT = typename prop_detail::extract_memfn_types<decltype(GetFn)>::type;
@@ -160,6 +168,11 @@ typename property<T, GetFn, SetFn>::SetT *
 property<T, GetFn, SetFn>::setter_this() noexcept {
   const auto member_ptr = reinterpret_cast<std::byte *>(this);
   return reinterpret_cast<SetT *>(member_ptr - offset_);
+}
+
+template <typename T, auto GetFn, auto SetFn>
+std::ostream &operator<<(std::ostream &os, const property<T, GetFn, SetFn> &p) {
+  return os << p.get();
 }
 
 /* Implementation for property with no setter */
