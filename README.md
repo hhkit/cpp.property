@@ -97,9 +97,16 @@ int main()
   without using `= default`) in the class.
 
   ```cpp
+  class A
+  {
+  public:
+    A(){} // without this, MSVC will not compile
+    
+    ... // and the rest from the example
+  };
+  
   int main()
   {
-    A a; // fails to compile
-    A a{}; // compiles
+    A a;
   }
   ```
